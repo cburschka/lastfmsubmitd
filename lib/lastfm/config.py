@@ -17,10 +17,10 @@ class DefaultPath:
     def __call__(self, use_sys_path, name):
         return self.funcs[use_sys_path](name)
 
-CONF = DefaultPath(lambda n: '/etc/%s.conf' % n,
-                   lambda n: '~/.%s/conf' % n)
-LOG = DefaultPath(lambda n: '/var/log/lastfm/%s.log' % n,
-                  lambda n: '~/.%s/log' % n)
+CONF = DefaultPath(lambda n: '/etc/{}.conf'.format(n),
+                   lambda n: '~/.{}/conf'.format(n))
+LOG = DefaultPath(lambda n: '/var/log/lastfm/{}.log'.format(n),
+                  lambda n: '~/.{}/log'.format(n))
 SPOOL = DefaultPath(lambda n: '/var/spool/lastfm',
                     lambda n: '~/.lastfmsubmitd/spool')
 

@@ -13,7 +13,7 @@ import lastfm.config
 import lastfm.marshaller
 
 DAEMON_NAME = 'lastmp'
-USAGE = 'usage: %s [--debug] [--no-daemon] [--help]' % DAEMON_NAME
+USAGE = 'usage: {} [--debug] [--no-daemon] [--help]'.format(DAEMON_NAME)
 
 # If the system load is high, we may not wake again until slightly
 # longer than we slept. This should really be like 0.1, but
@@ -60,7 +60,7 @@ class Song:
             d['album'] = lastfm.marshaller.guess_enc(self.album, 'utf-8')
         for reqd in ('artist', 'title', 'length'):
             if not d[reqd]:
-                raise ValueError('%s is missing %s' % (self.file, reqd))
+                raise ValueError('{} is missing {}'.format(self.file, reqd))
         else:
             return d
 
@@ -81,7 +81,7 @@ class MPDMonitor:
             raise MPDAuthError
 
         if not self.prevstatus or status.state != self.prevstatus.state:
-            self.cli.log.debug('Changed state: %s' % status.state)
+            self.cli.log.debug('Changed state: {}'.format(status.state))
 
         if status.state in ('play', 'pause'):
             pos, length = map(float, status.time.split(':'))
@@ -90,14 +90,13 @@ class MPDMonitor:
             if status.state == 'play':
                 if song != self.prevsong or \
                         self.prevstatus.state == 'stop':
-                    self.cli.log.info(u'New song: %s' % song)
+                    self.cli.log.info(u'New song: {}'.format(song))
                     if (self.prevsong and pos > self.sleep +
                             FUZZ + int(status.xfade)) or \
                             (self.prevsong is None and
                             pos/length > lastfm.SUB_PERCENT or
                             pos > lastfm.SUB_SECONDS):
-                        self.cli.log.warning('Started at %d, will not submit'
-                            % pos)
+                        self.cli.log.warning('Started at {}, will not submit'.format(pos))
                         self.skipped = True
                     else:
                         self.skipped = False
@@ -113,15 +112,14 @@ class MPDMonitor:
                         self.played_enough = False
                     if self.prevpos and \
                             pos > self.prevpos + self.sleep + FUZZ:
-                        self.cli.log.warning('Skipped from %d to %d' %
-                            (self.prevpos, pos))
+                        self.cli.log.warning('Skipped from {} to {}'.format(self.prevpos, pos))
                         self.skipped = True
                     if not self.skipped and not self.played_enough and \
                             length >= lastfm.MIN_LEN and \
                             length <= lastfm.MAX_LEN and \
                             (pos >= lastfm.SUB_SECONDS or \
                             pos/length >= lastfm.SUB_PERCENT):
-                        self.cli.log.debug('OK, %d/%d played' % (pos, length))
+                        self.cli.log.debug('OK, {}/{} played'.format(pos, length))
                         self.played_enough = True
                     if not self.submitted and not self.skipped and \
                             self.played_enough:
@@ -168,9 +166,9 @@ class MPDMonitor:
             self.cli.submit(song.dict())
             self.cli.log.info('Sent to daemon')
         except ValueError as e:
-            self.cli.log.error('Missing tags: %s' % e)
+            self.cli.log.error('Missing tags: {}'.format(e))
         except IOError:
-            self.cli.log.error("Can't write sub: %s" % e)
+            self.cli.log.error("Can't write sub: {}".format(e))
 
 class LmpConfig(lastfm.config.Config):
     def __init__(self):
@@ -202,7 +200,7 @@ if __name__ == '__main__':
     try:
         opts, args = getopt.getopt(sys.argv[1:], shortopts, longopts)
     except getopt.GetoptError as e:
-        print('%s: %s' % (DAEMON_NAME, e), file=sys.stderr)
+        print('{}: {}'.format(DAEMON_NAME, e), file=sys.stderr)
         print(USAGE, file=sys.stderr)
         sys.exit(1)
 
@@ -223,7 +221,7 @@ if __name__ == '__main__':
     try:
         conf = LmpConfig()
     except NoHostError:
-        print('%s: no MPD host specified' % DAEMON_NAME, file=sys.stderr)
+        print('{}: no MPD host specified'.format(DAEMON_NAME), file=sys.stderr)
         sys.exit(1)
 
     if conf.debug:
@@ -241,5 +239,5 @@ if __name__ == '__main__':
     except:
         import traceback
         einfo = traceback.format_exception(*sys.exc_info())
-        cli.log.error('Aborting: %s' % ''.join(einfo))
+        cli.log.error('Aborting: {}'.format(''.join(einfo)))
         sys.exit(1)

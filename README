@@ -46,7 +46,7 @@ following:
       # determine that your song has been played...
       song['time'] = time.gmtime()
 
-      cli.log.info('Played song: %s' % lastfm.repr(song))
+      cli.log.info('Played song: {}'.format(lastfm.repr(song)))
       cli.submit(song)
 
     You can also supply a custom configuration, like this::

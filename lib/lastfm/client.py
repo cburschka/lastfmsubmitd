@@ -7,8 +7,8 @@ import lastfm.config
 import lastfm.marshaller
 
 SLEEP = 5
-PID = lastfm.config.DefaultPath(lambda n: '/var/run/lastfm/%s.pid' % n,
-                                lambda n: '~/.%s/pid' % n)
+PID = lastfm.config.DefaultPath(lambda n: '/var/run/lastfm/{}.pid'.format(n),
+                                lambda n: '~/.{}/pid'.format(n))
 
 class Client:
     """Something that uses the lastfmsubmitd spool. Has a configuration
@@ -94,7 +94,7 @@ class Daemon(Client):
             if pid:
                 sys.exit(0)
         except OSError as e:
-            print("%s: can't fork: %s" % (self.name, e), file=sys.stderr)
+            print("{}: can't fork: {}".format(self.name, e), file=sys.stderr)
             sys.exit(1)
 
     def daemonize(self, fork=True):
@@ -121,7 +121,7 @@ class Daemon(Client):
             print(os.getpid(), file=pidfile)
             pidfile.close()
         except IOError as e:
-            print("can't open pidfile: %s" % e, file=sys.stderr)
+            print("can't open pidfile: {}".format(e), file=sys.stderr)
             self.conf.pidfile_path = None
 
     def cleanup(self):

@@ -34,7 +34,7 @@ if __name__ == '__main__':
     try:
         opts, args = getopt.getopt(sys.argv[1:], shortopts, longopts)
     except getopt.GetoptError as e:
-        print('lastfmsubmit: %s' % e, file=sys.stderr)
+        print('lastfmsubmit: {}'.format(e), file=sys.stderr)
         print(USAGE, file=sys.stderr)
         sys.exit(1)
 
@@ -76,7 +76,7 @@ if __name__ == '__main__':
                     print(USAGE)
                     sys.exit(0)
             except ValueError:
-                print("lastfmsubmit: can't parse %s" % opt, file=sys.stderr)
+                print("lastfmsubmit: can't parse {}".format(opt), file=sys.stderr)
                 sys.exit(1)
 
         if len(sub) == 0:
@@ -90,10 +90,10 @@ if __name__ == '__main__':
             print(lastfm.marshaller.dump(sub))
         else:
             try:
-                cli.log.debug('Sending %s to daemon' % lastfm.repr(sub))
+                cli.log.debug('Sending {} to daemon'.format(lastfm.repr(sub)))
                 cli.submit(sub)
             except IOError:
-                cli.log.error("Can't write sub: %s" % e)
+                cli.log.error("Can't write sub: {}".format(e))
                 sys.exit(1)
 
     except SystemExit as e:
@@ -101,5 +101,5 @@ if __name__ == '__main__':
     except:
         import traceback
         einfo = traceback.format_exception(*sys.exc_info())
-        cli.log.error('Aborting: %s' % ''.join(einfo))
+        cli.log.error('Aborting: {}'.format(''.join(einfo)))
         sys.exit(1)

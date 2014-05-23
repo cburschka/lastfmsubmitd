@@ -19,12 +19,12 @@ def repr(song):
     """A short text representation of a song dict, suitable for logging."""
 
     try:
-        name = '%s - %s' % (song['artist'], song['title'])
+        name = '{} - {}'.format(song['artist'], song['title'])
     except KeyError:
         name = 'unknown'
     try:
-        time = '%d:%02d' % divmod(song['length'], 60)
+        time = '{}:{:02}'.format(divmod(song['length'], 60))
     except KeyError:
         time = 'unknown'
 
-    return '%s [%s]' % (name, time)
+    return '{} [{}]'.format(name, time)

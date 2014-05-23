@@ -28,14 +28,14 @@ def dump(song):
     for k, v in song.iteritems():
         try:
             if k == 'length':
-                v = '%d:%02d' % divmod(v, 60)
+                v = '{}:{:02}'.format(divmod(v, 60))
             else:
-                v = '%d' % v
+                v = '{}'.format(v)
         except TypeError:
             try:
-                v = '!timestamp %s' % time.strftime(lastfm.TIME_FMT, v)
+                v = '!timestamp {}'.format(time.strftime(lastfm.TIME_FMT, v))
             except TypeError:
-                v = '"%s"' % unicode(v).replace('"', '\\"').encode('utf-8')
+                v = '"{}"'.format(unicode(v).replace('"', '\\"').encode('utf-8'))
         doc.append(': '.join([k, v]))
     return '\n'.join(doc)
 
