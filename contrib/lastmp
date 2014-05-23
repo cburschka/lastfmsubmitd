@@ -167,7 +167,7 @@ class MPDMonitor:
         try:
             self.cli.submit(song.dict())
             self.cli.log.info('Sent to daemon')
-        except ValueError, e:
+        except ValueError as e:
             self.cli.log.error('Missing tags: %s' % e)
         except IOError:
             self.cli.log.error("Can't write sub: %s" % e)
@@ -201,9 +201,9 @@ if __name__ == '__main__':
 
     try:
         opts, args = getopt.getopt(sys.argv[1:], shortopts, longopts)
-    except getopt.GetoptError, e:
-        print >>sys.stderr, '%s: %s' % (DAEMON_NAME, e)
-        print >>sys.stderr, USAGE
+    except getopt.GetoptError as e:
+        print('%s: %s' % (DAEMON_NAME, e), file=sys.stderr)
+        print(USAGE, file=sys.stderr)
         sys.exit(1)
 
     debug = False
@@ -217,13 +217,13 @@ if __name__ == '__main__':
             fork = False
             stderr = True
         elif opt in ('--help', '-h'):
-            print USAGE
+            print(USAGE)
             sys.exit(0)
 
     try:
         conf = LmpConfig()
     except NoHostError:
-        print >>sys.stderr, '%s: no MPD host specified' % DAEMON_NAME
+        print('%s: no MPD host specified' % DAEMON_NAME, file=sys.stderr)
         sys.exit(1)
 
     if conf.debug:
@@ -235,7 +235,7 @@ if __name__ == '__main__':
     try:
         cli.log.info('Starting')
         daemon(cli)
-    except SystemExit, e:
+    except SystemExit as e:
         cli.log.info('Exiting')
         sys.exit(e.args[0])
     except:

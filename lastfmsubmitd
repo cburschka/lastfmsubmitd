@@ -110,7 +110,7 @@ class LsdSpool:
                                 raise ValueError('missing %s' % reqd)
                         else:
                             new_subs.append(doc)
-                    except ValueError, e:
+                    except ValueError as e:
                         self.cli.log.warning('Invalid data, ignoring: %s' % e)
         if new_subs:
             self.cli.log.debug('Read %d sub(s)' % len(new_subs))
@@ -154,7 +154,7 @@ class LastFmSession:
             status_line = response.readline().strip()
             signal.alarm(0)
         # XXX: handshaketimeouterror?
-        except IOError, e:
+        except IOError as e:
             signal.alarm(0)
             raise HandshakeError(e)
 
@@ -232,7 +232,7 @@ class LastFmSession:
                 signal.alarm(HTTP_TIMEOUT)
                 response = urllib.urlopen(self.submit_url, post_str)
                 signal.alarm(0)
-            except (IOError, AttributeError), e:
+            except (IOError, AttributeError) as e:
                 # The AttributeError is some bizarre urllib bug where
                 # http_error_default tries to make an addinfourl with an fp
                 # that's actually None. I have no idea. It should be IOError.
@@ -305,7 +305,7 @@ def daemon(cli, online):
                 try:
                     session.handshake()
                     throttle.reset()
-                except HandshakeError, e:
+                except HandshakeError as e:
                     cli.log.error('Handshake failed: %s' % e)
                     throttle.backoff()
 
@@ -315,10 +315,10 @@ def daemon(cli, online):
                     session.submit(spool)
                     cli.log.debug('Done, %d in spool' % len(spool.subs))
                     throttle.reset()
-                except SessionError, e:
+                except SessionError as e:
                     cli.log.error('Session failed: %s' % e)
                     throttle.backoff()
-                except InvalidSubError, e:
+                except InvalidSubError as e:
                     cli.log.error('Submission failed: %s' % e)
                     throttle.backoff()
                 except SubTimeoutError:
@@ -333,9 +333,9 @@ if __name__ == '__main__':
 
     try:
         opts, args = getopt.getopt(sys.argv[1:], shortopts, longopts)
-    except getopt.GetoptError, e:
-        print >>sys.stderr, '%s: %s' % (DAEMON_NAME, e)
-        print >>sys.stderr, USAGE
+    except getopt.GetoptError as e:
+        print('%s: %s' % (DAEMON_NAME, e), file=sys.stderr)
+        print(USAGE, file=sys.stderr)
         sys.exit(1)
 
     debug = False
@@ -352,14 +352,13 @@ if __name__ == '__main__':
         elif opt in ('--no-network', '-l'):
             online = False
         elif opt in ('--help', '-h'):
-            print USAGE
+            print(USAGE)
             sys.exit(0)
 
     try:
         conf = LsdConfig()
     except NoAccountError:
-        print >>sys.stderr, '%s: no account info found; exiting' % \
-            DAEMON_NAME
+        print('%s: no account info found; exiting' % DAEMON_NAME, file=sys.stderr)
         sys.exit(0)
 
     if conf.debug:
@@ -372,7 +371,7 @@ if __name__ == '__main__':
     try:
         cli.log.info('Starting')
         daemon(cli, online)
-    except SystemExit, e:
+    except SystemExit as e:
         cli.log.info('Exiting')
         sys.exit(e.args[0])
     except:

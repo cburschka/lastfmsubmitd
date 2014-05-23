@@ -40,7 +40,7 @@ def dump(song):
     return '\n'.join(doc)
 
 def dump_documents(docs, out):
-    print >>out, '\n'.join([dump(d) for d in docs])
+    print('\n'.join([dump(d) for d in docs]), file=out)
 
 def load(doc):
     song = {}

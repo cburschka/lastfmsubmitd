@@ -42,7 +42,7 @@ class Client:
         try:
             filefmt = \
                 '%(asctime)s %(name)s[%(process)s] %(levelname)s: %(message)s'
-            oldmask = os.umask(002)
+            oldmask = os.umask(0o002)
             filehandler = logging.FileHandler(self.conf.log_path)
             filehandler.setLevel(level)
             filehandler.setFormatter(logging.Formatter(filefmt))
@@ -69,7 +69,7 @@ class Client:
         fd, path = tempfile.mkstemp(dir=self.conf.spool_path)
         spool_file = os.fdopen(fd, 'w+')
         lastfm.marshaller.dump_documents(songs, spool_file)
-        os.chmod(path, 0664)
+        os.chmod(path, 0o0664)
 
         return path
 
@@ -93,8 +93,8 @@ class Daemon(Client):
             pid = os.fork()
             if pid:
                 sys.exit(0)
-        except OSError, e:
-            print >>sys.stderr, "%s: can't fork: %s" % (self.name, e)
+        except OSError as e:
+            print("%s: can't fork: %s" % (self.name, e), file=sys.stderr)
             sys.exit(1)
 
     def daemonize(self, fork=True):
@@ -118,10 +118,10 @@ class Daemon(Client):
 
         try:
             pidfile = open(self.conf.pidfile_path, 'w')
-            print >>pidfile, os.getpid()
+            print(os.getpid(), file=pidfile)
             pidfile.close()
-        except IOError, e:
-            print >>sys.stderr, "can't open pidfile: %s" % e
+        except IOError as e:
+            print("can't open pidfile: %s" % e, file=sys.stderr)
             self.conf.pidfile_path = None
 
     def cleanup(self):
