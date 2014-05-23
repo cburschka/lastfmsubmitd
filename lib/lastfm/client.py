@@ -69,7 +69,7 @@ class Client:
         fd, path = tempfile.mkstemp(dir=self.conf.spool_path)
         spool_file = os.fdopen(fd, 'w+')
         lastfm.marshaller.dump_documents(songs, spool_file)
-        os.chmod(path, 0o0664)
+        os.chmod(path, 0o664)
 
         return path
 

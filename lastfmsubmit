@@ -83,7 +83,7 @@ if __name__ == '__main__':
             print('lastfmsubmit: nothing specified', file=sys.stderr)
             print(USAGE, file=sys.stderr)
             sys.exit(1)
-        if not sub.has_key('time'):
+        if 'time' not in sub:
             sub['time'] = time.gmtime()
 
         if stdout:

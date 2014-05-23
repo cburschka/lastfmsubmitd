@@ -25,7 +25,7 @@ def parse_string(s):
 
 def dump(song):
     doc = ['---']
-    for k, v in song.iteritems():
+    for k, v in song.items():
         try:
             if k == 'length':
                 v = '{}:{:02}'.format(divmod(v, 60))

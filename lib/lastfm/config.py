@@ -1,5 +1,5 @@
 import os
-import ConfigParser
+import configparser
 
 class DefaultPath:
     """The default paths we want depend on whether this is a "system"
@@ -24,11 +24,11 @@ LOG = DefaultPath(lambda n: '/var/log/lastfm/{}.log'.format(n),
 SPOOL = DefaultPath(lambda n: '/var/spool/lastfm',
                     lambda n: '~/.lastfmsubmitd/spool')
 
-class SaneConfParser(ConfigParser.RawConfigParser):
+class SaneConfParser(configparser.RawConfigParser):
     def get(self, section, option, default):
         try:
-            return ConfigParser.RawConfigParser.get(self, section, option)
-        except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+            return configparser.RawConfigParser.get(self, section, option)
+        except (configparser.NoSectionError, configparser.NoOptionError):
             return default
 
 class Config:

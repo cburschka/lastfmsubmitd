@@ -84,13 +84,13 @@ class MPDMonitor:
             self.cli.log.debug('Changed state: {}'.format(status.state))
 
         if status.state in ('play', 'pause'):
-            pos, length = map(float, status.time.split(':'))
+            pos, length = list(map(float, status.time.split(':')))
             if length == 0: length = lastfm.MAX_LEN
 
             if status.state == 'play':
                 if song != self.prevsong or \
                         self.prevstatus.state == 'stop':
-                    self.cli.log.info(u'New song: {}'.format(song))
+                    self.cli.log.info('New song: {}'.format(song))
                     if (self.prevsong and pos > self.sleep +
                             FUZZ + int(status.xfade)) or \
                             (self.prevsong is None and
