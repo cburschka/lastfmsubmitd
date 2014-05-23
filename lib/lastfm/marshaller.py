@@ -35,7 +35,7 @@ def dump(song):
             try:
                 v = '!timestamp {}'.format(time.strftime(lastfm.TIME_FMT, v))
             except TypeError:
-                v = '"{}"'.format(unicode(v).replace('"', '\\"').encode('utf-8'))
+                v = '"{}"'.format(v.replace('"', '\\"'))
         doc.append(': '.join([k, v]))
     return '\n'.join(doc)
 
